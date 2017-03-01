@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <meta charset="UTF-8">
+
+    <title>Ajax tests</title>
+</head>
+<body>
+<script src="./js/jquery-3.1.1.js"></script>
+<script src="./js/svg.js"></script>
+<div class="results" id="result1" style="visibility: visible">awaiting for resp</div>
+<div class="results" id="result2" style="visibility: hidden">another awaiting for resp</div>
+<button id="ajaxBtn" type="submit">Btn</button>
+<button id="deSolver" type="submit">Test json gen.</button>
+
+<div class="sail" id="Spinaker">
+    <table class="sailTable">
+        <tr class="sailTable">
+            <td class="sailTable">
+                <ul>
+                    <li>P<input id="sP" class="SpinakerVal" /></li>
+                    <li>B<input id="sB" class="SpinakerVal" /></li>
+                    <li>E<input id="sE" class="SpinakerVal" /></li>
+                </ul>
+            </td>
+            <td>
+                <div class="sail" id="SpinakerSVG"></div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+<div class="sail" id="Must" rType="Sail" rPrefix="aa_" >
+    <table class="sailTable">
+        <tr class="sailTable">
+            <td class="sailTable">
+                <ul>
+                    <li>P<input id="aa_DP" class="MustVal" /></li>
+                    <li>D<input id="aa_DD" class="MustVal" /></li>
+                    <li>D1<input id="aa_D1" class="MustVal" /></li>
+                    <li>d<input id="aa_dl" class="MustVal" /></li>
+                </ul>
+            </td>
+            <td>
+                <div class="sail" id="aa_MustSVG"></div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+<div class="sail" id="Main">
+    <table class="sailTable">
+        <tr class="sailTable">
+            <td class="sailTable">
+                <ul>
+                    <li>P<input id="P" class="MainVal" /></li>
+                    <li>HP<input id="HP" class="MainVal" /></li>
+                    <li>B<input id="B" class="MainVal" /></li>
+                    <li>HB<input id="HB" class="MainVal" /></li>
+                    <li>E<input id="E" class="MainVal" /></li>
+                    <li>HE<input id="HE" class="MainVal" /></li>
+                </ul>
+            </td>
+            <td>
+                <div class="sail" id="MainSVG"></div>
+            </td>
+        </tr>
+    </table>
+
+</div>
+
+
+<script>
+
+    $("#ajaxBtn").click(function (e) {
+            jQuery.ajax({
+                type: "POST",
+                url:'./result.php',
+                success: function (data) {
+                    //alert(data);
+                    //$("#result1").text(data);//пример замены текста в теге
+                    if ($("#result1").css("visibility") == "visible"){
+                        $("#result1").css("visibility","hidden");
+                        $("#result2").css("visibility","visible");
+                    }else{
+                        $("#result2").css("visibility","hidden");
+                        $("#result1").css("visibility","visible");
+                    }
+                }
+            })
+        })
+
+    $("#deSolver").click(function (e) {
+
+        //спочатку отримаємо єлементи массиву витрил класу
+        var prefix = $("#Must").attr("rPrefix");
+        var testString = "";
+        var elems = $("#Must").find(".MustVal");
+        elems.each(function (index) {
+            testString += elems[index].getAttribute("id").replace(prefix,"") + "=" + elems[index].value;
+        })
+        alert(testString);
+
+    })
+
+    $(".SpinakerVal").change(function () {
+
+        $('#SpinakerSVG').empty();
+
+        var draw = SVG('SpinakerSVG').size(300,300);
+
+        var sP = parseFloat(document.getElementById('sP').value);
+        var sB = parseFloat(document.getElementById('sB').value);
+        var sE = parseFloat(document.getElementById('sE').value);
+
+        var sHh = $('#SpinakerSVG').height()-5;
+        var sHw = $('#SpinakerSVG').width()-3;
+
+        var k =  sHh / ( Math.max( (isNaN(sP)?0:sP),  Math.max( (isNaN(sE) ? 0:sE),(isNaN(sB) ? 0 : sB))  )  ); //Р найдовша по висоті шкаторина
+
+        if(!isNaN(sP)){
+
+            var pAx = sHh;
+            var pAy = 0;
+
+            var pCx = 0;
+            var pCy = isNaN(sE) ? sHw/2 : sE/2*k;
+
+            var AC = draw.line(pAx,pAy,pCx,pCy).stroke({width:1 , color:'#111bff' });
+        }
+
+        if(!isNaN(sE)){
+            //так начебто в другий раз рахуємо
+            var pAx = sHh;
+            var pAy = 0;
+
+            var pEx = sHw;
+            var pEy = pAy;
+
+            var AE = draw.line(pAx,pAy,pEx,pEy).stroke({width:1 , color:'#ff162a' });
+        }
+
+        if(!isNaN(sB)){
+
+            var pCx = 0;
+            var pCy = isNaN(sE) ? sHw/2 : sE/2*k;
+
+            var pEx = sHw;
+            var pEy = pAy;
+
+            var CE = draw.line(pCx,pCy,pEx,pEy).stroke({width:1 , color:'#ff162a' });
+
+        }
+
+    })
+
+    $(".MustVal").change(function () {
+        $('#aa_MustSVG').empty();
+
+        var D = parseFloat(document.getElementById('aa_DD').value);
+        var D1= parseFloat(document.getElementById('aa_D1').value);
+        var dl = parseFloat(document.getElementById('aa_dl').value);
+
+        var maxR = Math.max( (isNaN(D)?0:D),(isNaN(D1)?0:D1) );
+        var minR = Math.min( (isNaN(D)?999999999999:D),(isNaN(D1)?999999999999:D1) );
+        dl = isNaN(dl) ? 0 :dl;
+
+        var drawMust = SVG('aa_MustSVG').size(maxR+dl,minR);
+
+        var mMust = drawMust.ellipse(maxR,minR).fill('None').stroke({width:1 , color:'#ff162a' }).x(dl);
+        var litcross=drawMust.circle(dl).fill('None').stroke({width:1 , color:'#111bff' }).dy(((minR-dl)/2) );
+    })
+
+    $(".MainVal").change(function () {
+
+        $('#MainSVG').empty();
+
+        var draw = SVG('MainSVG').size(300,300);
+
+        var P = parseFloat(document.getElementById('P').value);
+        var B = parseFloat(document.getElementById('B').value);
+        var E = parseFloat(document.getElementById('E').value);
+        var HP = parseFloat(document.getElementById('HP').value);
+        var HB = parseFloat(document.getElementById('HB').value);
+        var HE = parseFloat(document.getElementById('HE').value);
+
+        var maxWidth = HP > 0 ? HP : 0 + E;
+        var maxHeight= HE > 0 ? HE : 0 + P;
+
+
+        var baseX = HP > 0 ? HP : 0;
+        var baseY = HE > 0 ? HE : 0;
+
+        var Hh = $('#MainSVG').height()-5;
+        var Hw = $('#MainSVG').width()-3;
+
+        var k =  Hh / ( Math.max( (isNaN(P)?0:P),  Math.max( (isNaN(E) ? 0:E),(isNaN(B) ? 0 : B))  )  ); //Р найдовша по висоті шкаторина
+
+        if(isNaN(HP)) HP = 0;
+        if(isNaN(HB)) HB = 0;
+        if(isNaN(HE)) HE = 0;
+
+        if(!isNaN(P)){
+
+            var pAx = (HP > 0 ? (HP * k) : 0);
+            var pAy = Hh - (HE > 0 ? (HE * k) : 0);
+
+            var pBx = 0; //завжди 0
+            var pBy = Hh / 2 - (HE > 0 ? (HE * k) : 0);
+
+            var pCx = pAx;
+            var pCy = 0;
+
+        }
+        var AB = draw.line(pAx,pAy,pBx,pBy).stroke({width:1 , color:'#ff162a' });
+        var BC = draw.line(pBx,pBy,pCx,pCy).stroke({width:1 , color:'#111bff' });
+        var AC = draw.line(pAx,pAy,pCx,pCy).stroke({width:1 , color:'#111bff' });
+
+
+        if(!isNaN(E)){
+            //так начебто в другий раз рахуємо
+            var pAx = (HP > 0 ? (HP * k) : 0);
+            var pAy = Hh - (HE > 0 ? (HE * k) : 0);
+
+            var pEx = Hw  - (HP > 0 ? HP : 0);
+            var pEy =pAy;
+
+            var pFx = Hw / 2  - (HP > 0 ? HP * k : 0);
+            var pFy = Hh + (HE < 0 ? HE * k: 0);
+
+            var AF = draw.line(pAx,pAy,pFx,pFy).stroke({width:1 , color:'#111bff' });
+            var FE = draw.line(pFx,pFy,pEx,pEy).stroke({width:1 , color:'#111bff' });
+            var AE = draw.line(pAx,pAy,pEx,pEy).stroke({width:1 , color:'#ff162a' });
+        }
+
+        if(!isNaN(B)){
+
+            var pCx = (HP > 0 ? (HP * k) : 0);
+            var pCy = 0;
+
+            var pEx = Hw  - (HP > 0 ? HP : 0);
+            var pEy = Hh - (HE > 0 ? (HE * k) : 0);
+
+            var pDx =  (pEx-pCx)/2 + (HB * k);
+            var pDy = (Hh / 2 - (HE > 0 ? (HE * k) : 0));
+
+            var CD = draw.line(pCx,pCy,pDx,pDy).stroke({width:1 , color:'#111bff' });
+            var DE = draw.line(pDx,pDy,pEx,pEy).stroke({width:1 , color:'#111bff' });
+            var CE = draw.line(pCx,pCy,pEx,pEy).stroke({width:1 , color:'#ff162a' });
+
+        }
+
+    })
+</script>
+
+</body>
+</html>
