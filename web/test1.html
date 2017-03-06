@@ -13,6 +13,8 @@
 <button id="ajaxBtn" type="submit">Btn</button>
 <button id="deSolver" type="submit">Test json gen.</button>
 
+<div class="results" id="result3"></div>
+
 <div class="sail" id="Spinaker">
     <table class="sailTable">
         <tr class="sailTable">
@@ -111,14 +113,15 @@
         })
 
         testString += '"gb_version" : 1.1 }';
-        alert(testString);
+        //alert(testString);
 
         $.ajax({
             url:"result.php",
             dataType:"json",
             data:testString,
             success: function(msg){
-                alert(msg);
+                $("#result3").text(msg);
+
             }
         })
 
