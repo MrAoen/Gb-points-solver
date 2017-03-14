@@ -19,5 +19,14 @@ $cBoat->Name = 'Сферичний човен у морі';
 foreach ($cBoat->sails as $key=>$val){
     echo '<div>'.$cBoat->sails[$key]->getTemplate().'</div>';
 }
+echo $cBoat->getAjaxSubmit();
+echo '
+<button id="BoatSolver" type="submit">Розрахувати</button>
+<p>
+    <div id="BoatResult"></div>
+</p>';
+
+
+
 
 

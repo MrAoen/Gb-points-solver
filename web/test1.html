@@ -98,19 +98,26 @@
 
         //спочатку отримаємо єлементи массиву витрил класу
         var prefix = $("#Must").attr("rPrefix");
-        var testString = "{ ";
+        var testString = '{ "Must":[';
         var elems = $("#Must").find(".MustVal");
         elems.each(function (index) {
             testString += '"' + elems[index].getAttribute("id").replace(prefix,"") + '" : ' + (elems[index].value=="" ? 0 : elems[index].value)+ ",";
         })
+        testString += '"eof":true ],';
+
+        testString += ' "Main" :[';
         var elems = $("#Main").find(".MainVal");
         elems.each(function (index) {
             testString += '"' + elems[index].getAttribute("id").replace(prefix,"") + '" : ' + (elems[index].value=="" ? 0 : elems[index].value) + ",";
         })
+        testString += '"eof":true ],';
+
+        testString += ' "Spinaker" :[';
         var elems = $("#Spinaker").find(".SpinakerVal");
         elems.each(function (index) {
             testString += '"' + elems[index].getAttribute("id").replace(prefix,"") + '" : ' + (elems[index].value=="" ? 0 : elems[index].value) + ",";
         })
+        testString += '"eof":true ],';
 
         testString += '"gb_version" : 1.1 }';
         //alert(testString);
@@ -277,5 +284,15 @@
     })
 </script>
 
+
+</div><div>Ooops I still in proccess...</div>
+
+<script>$("#BoatSolver").click(function (e) { var jsonStr="{"; var prefixseDkGYDBMain=$("#seDkGYDBMain").attr("rprefix");jsonStr+='"seDkGYDBMain":[';var elems = $("#seDkGYDBMain").find(".seDkGYDBMainVal");elems.each(function (index) { jsonSt +='"'+ elems[index].getAttribute("id").replace(seDkGYDBMain,"")+'":'+(elems[index].value=="" ? 0 : elems[index].value)+ ",";}); jsonStr +='"eof":true],'; var prefixNeSAsGFNJib=$("#NeSAsGFNJib").attr("rprefix");jsonStr+='"NeSAsGFNJib":[';var elems = $("#NeSAsGFNJib").find(".NeSAsGFNJibVal");elems.each(function (index) { jsonSt +='"'+ elems[index].getAttribute("id").replace(NeSAsGFNJib,"")+'":'+(elems[index].value=="" ? 0 : elems[index].value)+ ",";}); jsonStr +='"eof":true],'; var prefixDeANBzQtSpinaker=$("#DeANBzQtSpinaker").attr("rprefix");jsonStr+='"DeANBzQtSpinaker":[';var elems = $("#DeANBzQtSpinaker").find(".DeANBzQtSpinakerVal");elems.each(function (index) { jsonSt +='"'+ elems[index].getAttribute("id").replace(DeANBzQtSpinaker,"")+'":'+(elems[index].value=="" ? 0 : elems[index].value)+ ",";}); jsonStr +='"eof":true],';jsonStr +='"gb_version" : 1.1 };'; $.ajax({
+    url:"boatresult.php",
+    dataType:"json",
+    data:jsonStr,
+    success: function(msg){
+        $("#BoatResult").text(msg);} })
+})</script>
 </body>
 </html>

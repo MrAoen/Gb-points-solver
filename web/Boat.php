@@ -61,6 +61,35 @@ class Boat
         $VT_VB = sqrt((-$XC2 + sqrt(pow($XC2,2) - 4 * $XC4 * $XC)) / (2 * $XC4));
         return 1.25/$VT_VB;
     }
+
+    /*
+     * Для використання потрібно мати на формі кнопку submit з id=BoatSolver
+     * та елемент <div> з id=BoatResult
+     * для розрахунку використовуйте редирект або сторінку boatresult.php
+     * */
+    public function getAjaxSubmit(){
+
+        $BoatJsonString = ' var jsonStr="{";';
+        foreach ($this->sails as $key=>$sail){
+            $rKey = $this->sails[$key]->SailPrefix.$key;
+            $BoatJsonString .= ' var prefix'.$rKey.'=$("#'.$rKey.'").attr("rprefix");';
+            $BoatJsonString .= "jsonStr+='".'"'.$rKey.'":['."';";
+            $BoatJsonString .= 'var elems = $("#'.$rKey.'").find(".'.$rKey.'Val");';
+            $BoatJsonString .= 'elems.each(function (index) {';
+            $BoatJsonString .= ' jsonSt +='."'".'"'."'+ elems[index].getAttribute(\"id\").replace(".$rKey.',"")+'."'".'":'."'+(elems[index].value==".'"" ? 0 : elems[index].value)+ ",";';
+            $BoatJsonString .= "}); jsonStr +='".'"eof":true],'."';";
+        }
+        $BoatJsonString .= 'jsonStr +='."'".'"gb_version" : 1.1 };'."';";
+
+        return '<script>$("#BoatSolver").click(function (e) {'.$BoatJsonString.PHP_EOL.' $.ajax({
+            url:"boatresult.php",
+            dataType:"json",
+            data:jsonStr,
+            success: function(msg){
+                $("#BoatResult").text(msg);} })
+            })</script>';
+
+    }
 }
 
 interface Square{
