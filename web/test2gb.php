@@ -7,7 +7,7 @@ echo '<!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
 
-    <title>Обчіслення гандікапного балу човна</title>
+    <title>Обчислення гандікапного балу човна</title>
 </head>
 <body>
 <script src="./js/jquery-3.1.1.js"></script>
