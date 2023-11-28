@@ -10,7 +10,7 @@ echo '<!DOCTYPE html>
     <title>Обчислення гандікапного балу човна</title>
 </head>
 <body>
-<script src="./js/jquery-3.1.1.js"></script>
+<script src="./js/jquery-3.6.4.min.js"></script>
 <script src="./js/svg.js"></script>';
 
 $cBoat = new Boat();

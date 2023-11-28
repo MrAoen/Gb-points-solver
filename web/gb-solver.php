@@ -62,7 +62,7 @@ function init_page()
         '<html lang="uk">' .
         '<head>
     <meta charset="UTF-8">
-    <script src="./js/jquery-3.1.1.js"></script>
+    <script src="./js/jquery-3.6.4.min.js"></script>
     <script src="./js/main.js"></script>
     <link rel="stylesheet" type="text/css" href="./js/main.css">
     <title>Розрахунок гандікапа вітрильних човнів</title>
